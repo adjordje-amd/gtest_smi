@@ -14,6 +14,10 @@
 
 #include "common.hpp"
 
+#include <amd_smi/amdsmi.h>
+#include <cstdint>
+#include <iostream>
+
 namespace smi {
 
 /**
@@ -70,6 +74,32 @@ template <typename driver> struct processor {
                  "Failed to get device power info!");
 
     return temperature;
+  }
+
+  void get_data() {
+    amdsmi_gpu_metrics_t gpu_metrics;
+    auto driver_call_result =
+        m_driver_api->get_gpu_metrics_info(m_processor_handle, &gpu_metrics);
+
+    amdsmi_engine_usage_t gpu_activity;
+    driver_call_result =
+        m_driver_api->get_gpu_activity(m_processor_handle, &gpu_activity);
+
+    uint64_t memory_used;
+    amdsmi_get_gpu_memory_usage(m_processor_handle, AMDSMI_MEM_TYPE_VRAM,
+                                &memory_used);
+
+    std::cout << "GFX activity -> "
+              << "GPU metrics info: " << gpu_metrics.average_gfx_activity
+              << ", GPU activity: " << gpu_activity.gfx_activity << std::endl;
+    std::cout << "UMC activity -> "
+              << "GPU metrics info: " << gpu_metrics.average_umc_activity
+              << ", GPU activity: " << gpu_activity.umc_activity << std::endl;
+    std::cout << "UMC activity -> "
+              << "MM metrics info: " << gpu_metrics.average_mm_activity
+              << ", MM activity: " << gpu_activity.mm_activity << std::endl;
+    std::cout << "Memory usage: " << gpu_metrics.mem_activity_acc << ", "
+              << memory_used << std::endl;
   }
 
 private:

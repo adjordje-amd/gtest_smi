@@ -1,19 +1,21 @@
 
+#include <chrono>
 #include <iostream>
+#include <thread>
 
 #include "smi/amd_smi_driver.hpp"
 #include "smi/data_collector.hpp"
+#include "smi/service.hpp"
 
 int main() {
-  smi::data_collector<smi::amd_smi_driver_factory> _collector;
+  smi::service<smi::amd_smi_driver_factory> service;
 
-  auto data = _collector.read();
-  std::cout << "Data size " << data.size() << std::endl;
-  for (auto &item : data) {
-    std::cout << "***************************************\n";
-    std::cout << "Power: " << item.power << "W\n";
-    std::cout << "Temperature: " << item.temperature << "C\n";
-    std::cout << "***************************************" << std::endl;
+  auto processors = service.get_processors();
+  auto x = 30;
+  while (x) {
+    processors[0]->get_data();
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    x--;
   }
 
   return 0;

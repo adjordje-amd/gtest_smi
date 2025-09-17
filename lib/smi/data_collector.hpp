@@ -47,8 +47,9 @@ template <typename driver_factory> struct data_collector {
   /**
    * @brief Constructs a data_collector and initializes processor list.
    */
-  data_collector() : m_smi(std::make_unique<service<driver_factory>>()) {
-    m_processors = m_smi->get_processors();
+  data_collector()
+      : m_smi_service(std::make_unique<service<driver_factory>>()) {
+    m_processors = m_smi_service->get_processors();
     std::cout << "Processors size " << m_processors.size() << std::endl;
     m_sample.resize(m_processors.size());
   }
@@ -75,7 +76,8 @@ template <typename driver_factory> struct data_collector {
 
 private:
   std::vector<data_sample> m_sample; ///< Samples for each processor
-  std::unique_ptr<service<driver_factory>> m_smi; ///< SMI service instance
+  std::unique_ptr<service<driver_factory>>
+      m_smi_service; ///< SMI service instance
   std::vector<std::shared_ptr<processor<driver_t>>>
       m_processors; ///< List of processors
 };
