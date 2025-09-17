@@ -73,20 +73,24 @@ TEST_F(ServiceTest, ConstructSuccess) {
   EXPECT_CALL(*g_mock_api_instance, init);
   EXPECT_CALL(*g_mock_api_instance, get_version(_));
 
-  EXPECT_NO_THROW({ smi::service<mock_driver_factory> svc; });
+  EXPECT_NO_THROW({ rocprofsys::amd_smi::service<mock_driver_factory> svc; });
 }
 
 TEST_F(ServiceTest, ConstructInitFail) {
   EXPECT_CALL(*g_mock_api_instance, init())
       .WillOnce(Return(AMDSMI_STATUS_INIT_ERROR));
-  EXPECT_THROW({ smi::service<mock_driver_factory> svc; }, std::runtime_error);
+  EXPECT_THROW(
+      { rocprofsys::amd_smi::service<mock_driver_factory> svc; },
+      std::runtime_error);
 }
 
 TEST_F(ServiceTest, ConstructVersionFail) {
   EXPECT_CALL(*g_mock_api_instance, init);
   EXPECT_CALL(*g_mock_api_instance, get_version(_))
       .WillOnce(Return(AMDSMI_STATUS_INIT_ERROR));
-  EXPECT_THROW({ smi::service<mock_driver_factory> svc; }, std::runtime_error);
+  EXPECT_THROW(
+      { rocprofsys::amd_smi::service<mock_driver_factory> svc; },
+      std::runtime_error);
 }
 
 TEST_F(ServiceTest, GetVersionReturnsCorrect) {
@@ -95,7 +99,7 @@ TEST_F(ServiceTest, GetVersionReturnsCorrect) {
   EXPECT_CALL(*g_mock_api_instance, get_version(_))
       .WillOnce(
           DoAll(SetArgPointee<0>(version), Return(AMDSMI_STATUS_SUCCESS)));
-  smi::service<mock_driver_factory> svc;
+  rocprofsys::amd_smi::service<mock_driver_factory> svc;
   auto v = svc.get_version();
   EXPECT_EQ(v.numeric_representation.major, 4);
   EXPECT_EQ(v.numeric_representation.minor, 5);
@@ -128,7 +132,7 @@ TEST_F(ServiceTest, GetProcessorsSuccess) {
       .WillRepeatedly(DoAll(SetArgPointee<1>(AMDSMI_PROCESSOR_TYPE_AMD_CPU),
                             Return(AMDSMI_STATUS_SUCCESS)));
 
-  smi::service<mock_driver_factory> svc;
+  rocprofsys::amd_smi::service<mock_driver_factory> svc;
   auto processors = svc.get_processors();
   EXPECT_EQ(processors.size(), 2);
 }
@@ -138,7 +142,7 @@ TEST_F(ServiceTest, GetProcessorsSocketFail) {
   EXPECT_CALL(*g_mock_api_instance, get_version(_));
   EXPECT_CALL(*g_mock_api_instance, get_socket_handles(_, nullptr))
       .WillOnce(Return(AMDSMI_STATUS_INIT_ERROR));
-  smi::service<mock_driver_factory> svc;
+  rocprofsys::amd_smi::service<mock_driver_factory> svc;
   EXPECT_THROW(svc.get_processors(), std::runtime_error);
 }
 
@@ -148,7 +152,7 @@ TEST_F(ServiceTest, GetProcessorsProcessorHandlesFail) {
   EXPECT_CALL(*g_mock_api_instance, get_socket_handles).Times(2);
   EXPECT_CALL(*g_mock_api_instance, get_processor_handles(_, _, nullptr))
       .WillOnce(Return(AMDSMI_STATUS_INIT_ERROR));
-  smi::service<mock_driver_factory> svc;
+  rocprofsys::amd_smi::service<mock_driver_factory> svc;
   EXPECT_THROW(svc.get_processors(), std::runtime_error);
 }
 
@@ -159,6 +163,6 @@ TEST_F(ServiceTest, GetProcessorsProcessorTypeFail) {
   EXPECT_CALL(*g_mock_api_instance, get_processor_handles(_, _, _)).Times(2);
   EXPECT_CALL(*g_mock_api_instance, get_processor_type(_, _))
       .WillOnce(Return(AMDSMI_STATUS_INIT_ERROR));
-  smi::service<mock_driver_factory> svc;
+  rocprofsys::amd_smi::service<mock_driver_factory> svc;
   EXPECT_THROW(svc.get_processors(), std::runtime_error);
 }

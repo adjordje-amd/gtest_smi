@@ -16,7 +16,7 @@ find_package(fmt CONFIG REQUIRED)
 add_subdirectory(lib)
 
 add_executable(${CMAKE_PROJECT_NAME} main.cpp)
-target_link_libraries(${CMAKE_PROJECT_NAME} smi-library fmt::fmt)
+target_link_libraries(${CMAKE_PROJECT_NAME} smi-library)
 
 
 add_subdirectory(tests)

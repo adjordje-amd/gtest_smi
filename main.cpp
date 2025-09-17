@@ -8,15 +8,12 @@
 #include "smi/service.hpp"
 
 int main() {
-  smi::service<smi::amd_smi_driver_factory> service;
+  rocprofsys::amd_smi::service<rocprofsys::amd_smi::amd_smi_driver_factory>
+      service;
 
   auto processors = service.get_processors();
-  auto x = 30;
-  while (x) {
-    processors[0]->get_data();
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    x--;
-  }
+  processors[0]->print_supported_metrics();
+  processors[0]->get_smi_metrics();
 
   return 0;
 }

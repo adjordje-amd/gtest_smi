@@ -1,27 +1,43 @@
-/**
- * @file service.hpp
- * @brief Defines the smi::service class template for managing AMD SMI driver
- * and processors.
- *
- * This file provides the service class template, which acts as a high-level
- * interface for initializing the AMD SMI driver, retrieving driver version
- * information, and enumerating available processors. The class is designed to
- * be used within the smi namespace and supports dependency injection of
- * different driver factory implementations.
- */
+// Copyright (c) 2018-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// with the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// * Redistributions of source code must retain the above copyright notice,
+// this list of conditions and the following disclaimers.
+//
+// * Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimers in the
+// documentation and/or other materials provided with the distribution.
+//
+// * Neither the names of Advanced Micro Devices, Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this Software without specific prior written permission.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH
+// THE SOFTWARE.
 
 #pragma once
 
-#include "common.hpp"
-#include "processor.hpp"
+#include "smi/common.hpp"
+#include "smi/processor.hpp"
 
 #include <amd_smi/amdsmi.h>
 #include <cstdint>
 #include <memory>
 #include <vector>
 
-namespace smi {
-
+namespace rocprofsys {
+namespace amd_smi {
 /**
  * @class service
  * @tparam driver_factory The factory type used to create the driver interface.
@@ -33,7 +49,6 @@ namespace smi {
  * checking.
  */
 template <typename driver_factory> struct service {
-
   using driver_t = typename driver_factory::driver_t;
 
   /**
@@ -127,4 +142,5 @@ private:
   version m_version;
 };
 
-} // namespace smi
+} // namespace amd_smi
+} // namespace rocprofsys

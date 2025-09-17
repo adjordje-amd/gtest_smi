@@ -16,7 +16,8 @@
 #include <cstdint>
 #include <iostream>
 
-namespace smi {
+namespace rocprofsys {
+namespace amd_smi {
 
 /**
  * @struct data_sample
@@ -82,4 +83,5 @@ private:
       m_processors; ///< List of processors
 };
 
-} // namespace smi
+} // namespace amd_smi
+} // namespace rocprofsys
